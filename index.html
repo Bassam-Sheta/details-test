@@ -8,7 +8,8 @@
       font-family: Arial, sans-serif;
       background-color: #FFFFFF;
       color: #000000;
-      margin: 0; padding: 0;
+      margin: 0; 
+      padding: 0;
     }
     .container {
       width: 90%;
@@ -62,6 +63,7 @@
       padding: 10px;
       border-radius: 4px;
       background-color: #fff;
+      min-height: 100px;  /* Added minimum height */
     }
     .ordering-item {
       padding: 8px;
@@ -234,7 +236,6 @@
       const qElem = document.createElement("div");
       qElem.className = "question";
       const qTitle = document.createElement("h3");
-      // For multi-line question text, use innerText to preserve newlines
       qTitle.innerText = qdata.question;
       qElem.appendChild(qTitle);
       
@@ -272,7 +273,7 @@
         });
       } 
       else if (qdata.type === "checkbox_image") {
-        // Create two canvases inside a container
+        // Create two canvases
         const canvasContainer = document.createElement("div");
         canvasContainer.className = "canvas-container";
         const canvas1 = document.createElement("canvas");
@@ -300,11 +301,13 @@
           cbGroup.appendChild(document.createElement("br"));
         });
         qElem.appendChild(cbGroup);
-        // Increase delay to ensure canvases are rendered before drawing
+        // Increase delay to 500ms and add logging
         setTimeout(() => {
+          console.log("Attempting to draw canvas1:", document.getElementById("canvas1"));
           drawTable("canvas1", qdata.reports.report1);
+          console.log("Attempting to draw canvas2:", document.getElementById("canvas2"));
           drawTable("canvas2", qdata.reports.report2);
-        }, 200);
+        }, 500);
       } 
       else if (qdata.type === "ordering") {
         // Create a heading for ordering question
@@ -339,7 +342,10 @@
     // ---------------------------
     function drawTable(canvasId, data) {
       const canvas = document.getElementById(canvasId);
-      if (!canvas) return;
+      if (!canvas) {
+        console.log("Canvas not found: " + canvasId);
+        return;
+      }
       const ctx = canvas.getContext("2d");
       const cellW = 80, cellH = 25;
       ctx.fillStyle = "#FFFFFF";
