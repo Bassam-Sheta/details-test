@@ -8,7 +8,7 @@
       font-family: Arial, sans-serif;
       background-color: #FFFFFF;
       color: #000000;
-      margin: 0; 
+      margin: 0;
       padding: 0;
     }
     .container {
@@ -63,7 +63,7 @@
       padding: 10px;
       border-radius: 4px;
       background-color: #fff;
-      min-height: 100px;  /* Added minimum height */
+      min-height: 100px;
     }
     .ordering-item {
       padding: 8px;
@@ -122,11 +122,12 @@
     const quizStartTime = new Date();
     const logEntries = [];
 
-    // Define questions
+    // Define questions. Note that we now return [q3, q1, q2] so Q3 appears first.
     const questions = (function() {
-      // Q1: Y/N Sub-Questions
+      // Q1: Global Client Audit (Y/N Sub-Questions)
       const q1 = {
-        question: "Question 1: Global Client Audit",
+        // Optionally rename question text if desired
+        question: "Question 2: Global Client Audit",
         instructions: "Mark Y (Match) or N (Mismatch) for each sub-item.",
         type: "y_n_subq",
         time: 120,
@@ -145,8 +146,8 @@
           { item: "Delivery Code", paper: "DPD#XQ-ΓΤΨ-2024", screen: "DPD#XQ-ΓΤΦ-2024", correct: "N" }
         ]
       };
-      
-      // Q2: Checkbox with images (Canvas drawings)
+
+      // Q2: Football Tournament Data (Canvas drawings + checkboxes)
       const report1 = [
         ["Player#", "Goals", "KeyPass", "MotM?", "Bonus"],
         ["7", "2", "15", "yes", "A-2.5"],
@@ -168,15 +169,15 @@
         ["24", "yes", "G-4,0", "12", "20"]
       ];
       const q2 = {
-        question: "Question 2 of 3:\n\nBelow are two reports showing performance data for 7 players.\nSelect the players with inconsistent data.",
+        question: "Question 3: Football Tournament Data\n\nBelow are two reports showing performance data for 7 players.\nSelect the players with inconsistent data.",
         type: "checkbox_image",
         time: 240,
         options: ["7", "10", "12", "15", "18", "21", "24"],
         correct_indices: [1, 2, 4, 6],
         reports: { report1, report2 }
       };
-      
-      // Q3: Ordering question (drag-and-drop)
+
+      // Q3: Barista Tasks Ordering (Drag-and-Drop)
       const steps = [
         "Unlock drawer (code: 1122)",
         "Check delivery slip",
@@ -189,13 +190,14 @@
         "Send summary text"
       ];
       const q3 = {
-        question: "Question 3 of 3\n\nAttention to Detail\n\nYou’re covering for a barista who left a voicemail. Place the tasks in the correct order:",
+        question: "Question 1: Barista Tasks Ordering\n\nDrag and drop the tasks in the correct order:",
         type: "ordering",
         time: 270,
         steps: steps
       };
-      
-      return [q1, q2, q3];
+
+      // Return with Q3 first, Q1 second, Q2 third.
+      return [q3, q1, q2];
     })();
 
     // ---------------------------
@@ -267,8 +269,10 @@
           radioN.value = "N";
           const labelN = document.createElement("label");
           labelN.innerText = " N ";
-          subDiv.appendChild(radioY); subDiv.appendChild(labelY);
-          subDiv.appendChild(radioN); subDiv.appendChild(labelN);
+          subDiv.appendChild(radioY); 
+          subDiv.appendChild(labelY);
+          subDiv.appendChild(radioN); 
+          subDiv.appendChild(labelN);
           qElem.appendChild(subDiv);
         });
       } 
@@ -287,7 +291,7 @@
         canvasContainer.appendChild(canvas1);
         canvasContainer.appendChild(canvas2);
         qElem.appendChild(canvasContainer);
-        // Create checkboxes
+        // Create checkboxes for options
         const cbGroup = document.createElement("div");
         cbGroup.className = "checkbox-group";
         qdata.options.forEach((option, idx) => {
@@ -301,11 +305,11 @@
           cbGroup.appendChild(document.createElement("br"));
         });
         qElem.appendChild(cbGroup);
-        // Increase delay to 500ms and add logging
+        // Delay drawing to ensure canvases are rendered
         setTimeout(() => {
-          console.log("Attempting to draw canvas1:", document.getElementById("canvas1"));
+          console.log("Drawing canvas1:", document.getElementById("canvas1"));
           drawTable("canvas1", qdata.reports.report1);
-          console.log("Attempting to draw canvas2:", document.getElementById("canvas2"));
+          console.log("Drawing canvas2:", document.getElementById("canvas2"));
           drawTable("canvas2", qdata.reports.report2);
         }, 500);
       } 
@@ -460,7 +464,7 @@
       logEntries.push(logText);
       currentQuestionIndex++;
       
-      // Simple fade transition
+      // Fade transition effect
       const quizSection = document.getElementById("quizSection");
       quizSection.style.opacity = 1;
       let fadeOut = setInterval(() => {
